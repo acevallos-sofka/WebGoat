@@ -8,8 +8,8 @@ import static org.owasp.webgoat.container.assignments.AttackResultBuilder.failed
 import static org.owasp.webgoat.container.assignments.AttackResultBuilder.success;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Random;
 import org.owasp.webgoat.container.assignments.AssignmentEndpoint;
 import org.owasp.webgoat.container.assignments.AttackResult;
 import org.springframework.http.MediaType;
@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EncodingAssignment implements AssignmentEndpoint {
+
+  private static final SecureRandom RANDOM = new SecureRandom();
 
   public static String getBasicAuth(String username, String password) {
     return Base64.getEncoder().encodeToString(username.concat(":").concat(password).getBytes());
@@ -34,7 +36,7 @@ public class EncodingAssignment implements AssignmentEndpoint {
     String username = request.getUserPrincipal().getName();
     if (basicAuth == null) {
       String password =
-          HashingAssignment.SECRETS[new Random().nextInt(HashingAssignment.SECRETS.length)];
+          HashingAssignment.SECRETS[RANDOM.nextInt(HashingAssignment.SECRETS.length)];
       basicAuth = getBasicAuth(username, password);
       request.getSession().setAttribute("basicAuth", basicAuth);
     }
