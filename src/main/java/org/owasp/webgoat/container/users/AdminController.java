@@ -4,6 +4,7 @@
  */
 package org.owasp.webgoat.container.users;
 
+import jakarta.validation.constraints.Size;
 import java.security.SecureRandom;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -83,7 +84,7 @@ public class AdminController {
    */
   @GetMapping("/users/{username}")
   @PreAuthorize("hasAuthority('WEBGOAT_ADMIN')")
-  public ResponseEntity<UserDetail> userDetail(@PathVariable String username) {
+  public ResponseEntity<UserDetail> userDetail(@PathVariable @Size(max = 45) String username) {
     WebGoatUser user =
         userService.getAllUsers().stream()
             .filter(u -> u.getUsername().equals(username))
